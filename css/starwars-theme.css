@@ -1,0 +1,357 @@
+/* ============================================
+   Star Wars Theme for Reveal.js
+   SDD - Spec Driven Development & SpecKit
+   ============================================ */
+
+:root {
+  --sw-yellow: #FFE81F;
+  --sw-blue: #4BD5EE;
+  --sw-red: #FF2D2D;
+  --sw-green: #39FF14;
+  --sw-orange: #FF6600;
+}
+
+.reveal {
+  background: radial-gradient(ellipse at center, #0a0a2e 0%, #000000 100%);
+}
+
+/* Starfield background */
+.reveal::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 30% 50%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 50% 80%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 70% 10%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 90% 40%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 15% 70%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 40% 30%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 60% 90%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 80% 60%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 25% 15%, #fff 100%, transparent),
+    radial-gradient(2px 2px at 5% 45%, rgba(255,255,255,0.6) 100%, transparent),
+    radial-gradient(2px 2px at 55% 5%, rgba(255,255,255,0.6) 100%, transparent),
+    radial-gradient(2px 2px at 85% 85%, rgba(255,255,255,0.6) 100%, transparent),
+    radial-gradient(2px 2px at 35% 65%, rgba(255,255,255,0.6) 100%, transparent),
+    radial-gradient(2px 2px at 75% 35%, rgba(255,255,255,0.6) 100%, transparent);
+  pointer-events: none;
+  z-index: -1;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* Typography */
+.reveal h1, .reveal h2, .reveal h3 {
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.reveal h1 {
+  color: var(--sw-yellow);
+  text-shadow: 0 0 20px rgba(255,232,31,0.5), 0 0 40px rgba(255,232,31,0.3);
+  font-size: 2.2em;
+}
+
+.reveal h2 {
+  color: var(--sw-blue);
+  text-shadow: 0 0 15px rgba(75,213,238,0.5);
+  font-size: 1.6em;
+}
+
+.reveal h3 {
+  color: var(--sw-green);
+  text-shadow: 0 0 10px rgba(57,255,20,0.5);
+  font-size: 1.2em;
+}
+
+.reveal p, .reveal li {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65em;
+  color: #c0c0c0;
+  line-height: 1.8;
+}
+
+.reveal ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.reveal li::before {
+  content: '⚡ ';
+  color: var(--sw-yellow);
+}
+
+/* Code blocks */
+.reveal code {
+  font-family: 'Courier New', monospace;
+  background: rgba(255,232,31,0.1);
+  border: 1px solid rgba(255,232,31,0.3);
+  border-radius: 4px;
+  padding: 2px 8px;
+  color: var(--sw-green);
+}
+
+.reveal pre {
+  background: rgba(0,0,0,0.8);
+  border: 2px solid var(--sw-blue);
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(75,213,238,0.3), inset 0 0 20px rgba(0,0,0,0.5);
+  width: 90%;
+  margin: 0 auto;
+}
+
+.reveal pre code {
+  background: transparent;
+  border: none;
+  font-size: 0.85em;
+  line-height: 1.6;
+  color: #e0e0e0;
+  padding: 15px;
+}
+
+/* Title styles */
+.sw-title {
+  color: var(--sw-yellow) !important;
+  font-size: 3em !important;
+  text-shadow: 0 0 30px rgba(255,232,31,0.6), 0 0 60px rgba(255,232,31,0.3) !important;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 20px rgba(255,232,31,0.4), 0 0 40px rgba(255,232,31,0.2); }
+  to { text-shadow: 0 0 30px rgba(255,232,31,0.8), 0 0 60px rgba(255,232,31,0.4), 0 0 80px rgba(255,232,31,0.2); }
+}
+
+.sw-subtitle {
+  color: var(--sw-blue) !important;
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 1em !important;
+  letter-spacing: 5px;
+  animation: fadeSlideUp 1.5s ease-out;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Lightsaber effects */
+.lightsaber {
+  display: inline-block;
+  width: 300px;
+  height: 6px;
+  border-radius: 3px;
+  margin: 20px auto;
+  animation: ignite 1s ease-out forwards;
+}
+
+.lightsaber-blue {
+  background: linear-gradient(90deg, #fff, var(--sw-blue));
+  box-shadow: 0 0 10px var(--sw-blue), 0 0 20px var(--sw-blue), 0 0 40px var(--sw-blue);
+}
+
+.lightsaber-green {
+  background: linear-gradient(90deg, #fff, var(--sw-green));
+  box-shadow: 0 0 10px var(--sw-green), 0 0 20px var(--sw-green), 0 0 40px var(--sw-green);
+}
+
+.lightsaber-red {
+  background: linear-gradient(90deg, #fff, var(--sw-red));
+  box-shadow: 0 0 10px var(--sw-red), 0 0 20px var(--sw-red), 0 0 40px var(--sw-red);
+}
+
+@keyframes ignite {
+  from { width: 0; opacity: 0; }
+  to { width: 300px; opacity: 1; }
+}
+
+/* Command cards */
+.command-card {
+  background: rgba(0,0,0,0.7);
+  border: 2px solid var(--sw-blue);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px auto;
+  max-width: 800px;
+  box-shadow: 0 0 15px rgba(75,213,238,0.2);
+  transition: all 0.3s ease;
+}
+
+.command-card:hover {
+  border-color: var(--sw-yellow);
+  box-shadow: 0 0 25px rgba(255,232,31,0.3);
+  transform: scale(1.02);
+}
+
+.command-name {
+  color: var(--sw-yellow) !important;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1em !important;
+  margin-bottom: 8px !important;
+  text-shadow: 0 0 10px rgba(255,232,31,0.5);
+}
+
+.command-desc {
+  color: #a0a0a0 !important;
+  font-size: 0.6em !important;
+  margin-bottom: 10px !important;
+}
+
+.emoji-icon {
+  font-size: 1.5em;
+  margin-right: 10px;
+}
+
+/* Force quote */
+.force-quote {
+  font-style: italic;
+  color: var(--sw-yellow) !important;
+  font-size: 0.8em !important;
+  text-align: center;
+  margin: 15px auto;
+  max-width: 700px;
+  border-left: 3px solid var(--sw-yellow);
+  padding-left: 15px;
+}
+
+/* Hologram effect */
+.hologram {
+  animation: hologram 3s ease-in-out infinite;
+}
+
+@keyframes hologram {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+  52% { opacity: 0.4; }
+  54% { opacity: 0.9; }
+}
+
+/* Slide number */
+.slide-number {
+  color: var(--sw-yellow) !important;
+  font-family: 'Orbitron', sans-serif !important;
+}
+
+/* Progress bar */
+.reveal .progress {
+  background: rgba(255,232,31,0.2);
+}
+.reveal .progress span {
+  background: var(--sw-yellow);
+  box-shadow: 0 0 10px var(--sw-yellow);
+}
+
+/* Controls */
+.reveal .controls button {
+  color: var(--sw-yellow);
+}
+
+/* Diagram elements */
+.diagram-box {
+  display: inline-block;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid var(--sw-blue);
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin: 5px;
+  color: var(--sw-blue);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.55em;
+}
+
+.diagram-arrow {
+  display: inline-block;
+  color: var(--sw-yellow);
+  font-size: 1.5em;
+  margin: 0 10px;
+  vertical-align: middle;
+}
+
+/* Benefits grid */
+.benefit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.benefit-item {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--sw-blue);
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+  border-color: var(--sw-yellow);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(255,232,31,0.2);
+}
+
+.benefit-item .emoji-icon {
+  display: block;
+  font-size: 2em;
+  margin-bottom: 8px;
+}
+
+/* Footer */
+.reveal .footer-note {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.4em;
+  color: rgba(255,232,31,0.4);
+  letter-spacing: 3px;
+}
+
+/* Keyboard navigation slide */
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.nav-item {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--sw-blue);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  border-color: var(--sw-yellow);
+  box-shadow: 0 0 15px rgba(255,232,31,0.2);
+}
+
+.nav-key {
+  display: inline-block;
+  background: rgba(255,232,31,0.15);
+  border: 1px solid var(--sw-yellow);
+  border-radius: 4px;
+  padding: 2px 10px;
+  color: var(--sw-yellow) !important;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7em !important;
+  margin-right: 8px;
+}
+
+.nav-desc {
+  color: #c0c0c0 !important;
+  font-size: 0.55em !important;
+}
