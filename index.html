@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDD - Spec Driven Development &amp; SpecKit</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sw-yellow: #FFE81F;
+      --sw-blue: #4BD5EE;
+      --sw-red: #FF2D2D;
+      --sw-green: #39FF14;
+      --sw-orange: #FF6600;
+    }
+
+    .reveal {
+      background: radial-gradient(ellipse at center, #0a0a2e 0%, #000000 100%);
+    }
+
+    /* Starfield background */
+    .reveal::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 30% 50%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 50% 80%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 70% 10%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 90% 40%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 15% 70%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 40% 30%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 60% 90%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 80% 60%, #fff 100%, transparent),
+        radial-gradient(1px 1px at 25% 15%, #fff 100%, transparent),
+        radial-gradient(2px 2px at 5% 45%, rgba(255,255,255,0.6) 100%, transparent),
+        radial-gradient(2px 2px at 55% 5%, rgba(255,255,255,0.6) 100%, transparent),
+        radial-gradient(2px 2px at 85% 85%, rgba(255,255,255,0.6) 100%, transparent),
+        radial-gradient(2px 2px at 35% 65%, rgba(255,255,255,0.6) 100%, transparent),
+        radial-gradient(2px 2px at 75% 35%, rgba(255,255,255,0.6) 100%, transparent);
+      pointer-events: none;
+      z-index: -1;
+      animation: twinkle 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .reveal h1 {
+      color: var(--sw-yellow);
+      text-shadow: 0 0 20px rgba(255,232,31,0.5), 0 0 40px rgba(255,232,31,0.3);
+      font-size: 2.2em;
+    }
+
+    .reveal h2 {
+      color: var(--sw-blue);
+      text-shadow: 0 0 15px rgba(75,213,238,0.5);
+      font-size: 1.6em;
+    }
+
+    .reveal h3 {
+      color: var(--sw-green);
+      text-shadow: 0 0 10px rgba(57,255,20,0.5);
+      font-size: 1.2em;
+    }
+
+    .reveal p, .reveal li {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65em;
+      color: #c0c0c0;
+      line-height: 1.8;
+    }
+
+    .reveal ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .reveal li::before {
+      content: '⚡ ';
+      color: var(--sw-yellow);
+    }
+
+    .reveal code {
+      font-family: 'Courier New', monospace;
+      background: rgba(255,232,31,0.1);
+      border: 1px solid rgba(255,232,31,0.3);
+      border-radius: 4px;
+      padding: 2px 8px;
+      color: var(--sw-green);
+    }
+
+    .reveal pre {
+      background: rgba(0,0,0,0.8);
+      border: 2px solid var(--sw-blue);
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(75,213,238,0.3), inset 0 0 20px rgba(0,0,0,0.5);
+      width: 90%;
+      margin: 0 auto;
+    }
+
+    .reveal pre code {
+      background: transparent;
+      border: none;
+      font-size: 0.85em;
+      line-height: 1.6;
+      color: #e0e0e0;
+      padding: 15px;
+    }
+
+    .sw-title {
+      color: var(--sw-yellow) !important;
+      font-size: 3em !important;
+      text-shadow: 0 0 30px rgba(255,232,31,0.6), 0 0 60px rgba(255,232,31,0.3) !important;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(255,232,31,0.4), 0 0 40px rgba(255,232,31,0.2); }
+      to { text-shadow: 0 0 30px rgba(255,232,31,0.8), 0 0 60px rgba(255,232,31,0.4), 0 0 80px rgba(255,232,31,0.2); }
+    }
+
+    .sw-subtitle {
+      color: var(--sw-blue) !important;
+      font-family: 'Orbitron', sans-serif !important;
+      font-size: 1em !important;
+      letter-spacing: 5px;
+      animation: fadeSlideUp 1.5s ease-out;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lightsaber {
+      display: inline-block;
+      width: 300px;
+      height: 6px;
+      border-radius: 3px;
+      margin: 20px auto;
+      animation: ignite 1s ease-out forwards;
+    }
+
+    .lightsaber-blue {
+      background: linear-gradient(90deg, #fff, var(--sw-blue));
+      box-shadow: 0 0 10px var(--sw-blue), 0 0 20px var(--sw-blue), 0 0 40px var(--sw-blue);
+    }
+
+    .lightsaber-green {
+      background: linear-gradient(90deg, #fff, var(--sw-green));
+      box-shadow: 0 0 10px var(--sw-green), 0 0 20px var(--sw-green), 0 0 40px var(--sw-green);
+    }
+
+    .lightsaber-red {
+      background: linear-gradient(90deg, #fff, var(--sw-red));
+      box-shadow: 0 0 10px var(--sw-red), 0 0 20px var(--sw-red), 0 0 40px var(--sw-red);
+    }
+
+    @keyframes ignite {
+      from { width: 0; opacity: 0; }
+      to { width: 300px; opacity: 1; }
+    }
+
+    .command-card {
+      background: rgba(0,0,0,0.7);
+      border: 2px solid var(--sw-blue);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 10px auto;
+      max-width: 800px;
+      box-shadow: 0 0 15px rgba(75,213,238,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .command-card:hover {
+      border-color: var(--sw-yellow);
+      box-shadow: 0 0 25px rgba(255,232,31,0.3);
+      transform: scale(1.02);
+    }
+
+    .command-name {
+      color: var(--sw-yellow) !important;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1em !important;
+      margin-bottom: 8px !important;
+      text-shadow: 0 0 10px rgba(255,232,31,0.5);
+    }
+
+    .command-desc {
+      color: #a0a0a0 !important;
+      font-size: 0.6em !important;
+      margin-bottom: 10px !important;
+    }
+
+    .emoji-icon {
+      font-size: 1.5em;
+      margin-right: 10px;
+    }
+
+    .force-quote {
+      font-style: italic;
+      color: var(--sw-yellow) !important;
+      font-size: 0.8em !important;
+      text-align: center;
+      margin: 15px auto;
+      max-width: 700px;
+      border-left: 3px solid var(--sw-yellow);
+      padding-left: 15px;
+    }
+
+    .hologram {
+      animation: hologram 3s ease-in-out infinite;
+    }
+
+    @keyframes hologram {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+      52% { opacity: 0.4; }
+      54% { opacity: 0.9; }
+    }
+
+    .slide-number {
+      color: var(--sw-yellow) !important;
+      font-family: 'Orbitron', sans-serif !important;
+    }
+
+    .reveal .progress {
+      background: rgba(255,232,31,0.2);
+    }
+    .reveal .progress span {
+      background: var(--sw-yellow);
+      box-shadow: 0 0 10px var(--sw-yellow);
+    }
+
+    .reveal .controls button {
+      color: var(--sw-yellow);
+    }
+
+    .diagram-box {
+      display: inline-block;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid var(--sw-blue);
+      border-radius: 8px;
+      padding: 10px 20px;
+      margin: 5px;
+      color: var(--sw-blue);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55em;
+    }
+
+    .diagram-arrow {
+      display: inline-block;
+      color: var(--sw-yellow);
+      font-size: 1.5em;
+      margin: 0 10px;
+      vertical-align: middle;
+    }
+
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .benefit-item {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--sw-blue);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .benefit-item:hover {
+      border-color: var(--sw-yellow);
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(255,232,31,0.2);
+    }
+
+    .benefit-item .emoji-icon {
+      display: block;
+      font-size: 2em;
+      margin-bottom: 8px;
+    }
+
+    .reveal .footer-note {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.4em;
+      color: rgba(255,232,31,0.4);
+      letter-spacing: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- SLIDE 1: Title -->
+      <section data-transition="zoom" data-background-transition="zoom">
+        <p style="font-size:2em; margin-bottom:0;">⭐</p>
+        <h1 class="sw-title fragment fade-up">SDD</h1>
+        <p class="sw-subtitle fragment fade-up">Spec Driven Development</p>
+        <div class="lightsaber lightsaber-blue fragment fade-in"></div>
+        <p class="fragment fade-up" style="color:var(--sw-yellow); font-family:'Orbitron',sans-serif; font-size:0.6em; letter-spacing:2px;">
+          &amp; SpecKit — a ferramenta Jedi do desenvolvedor
+        </p>
+        <p class="force-quote fragment fade-up">"Que a especificação esteja com você."</p>
+      </section>
+
+      <!-- SLIDE 2: What is SDD -->
+      <section data-transition="convex">
+        <h2>🌌 O que é SDD?</h2>
+        <div class="lightsaber lightsaber-green fragment"></div>
+        <p class="fragment fade-right" style="font-size:0.7em; color:#ddd; max-width:700px; margin:15px auto;">
+          <strong style="color:var(--sw-yellow);">Spec Driven Development</strong> é uma metodologia onde a
+          <em style="color:var(--sw-blue);">especificação da API</em> (OpenAPI/Swagger) é criada
+          <strong style="color:var(--sw-green);">antes</strong> do código.
+        </p>
+        <div class="fragment fade-up" style="margin-top:20px;">
+          <span class="diagram-box">📜 Spec (OpenAPI)</span>
+          <span class="diagram-arrow">→</span>
+          <span class="diagram-box">⚙️ Geração de Código</span>
+          <span class="diagram-arrow">→</span>
+          <span class="diagram-box">✅ Validação</span>
+          <span class="diagram-arrow">→</span>
+          <span class="diagram-box">🚀 Deploy</span>
+        </div>
+        <p class="force-quote fragment fade-up">"A especificação é o caminho. O código, seu destino."</p>
+      </section>
+
+      <!-- SLIDE 3: Why SDD -->
+      <section data-transition="slide">
+        <h2>🛡️ Por que usar SDD?</h2>
+        <div class="lightsaber lightsaber-red fragment"></div>
+        <div class="benefit-grid fragment fade-up">
+          <div class="benefit-item">
+            <span class="emoji-icon">📋</span>
+            <p style="color:var(--sw-blue); font-size:0.6em;">Contrato Primeiro</p>
+            <p style="font-size:0.45em;">API definida antes do código</p>
+          </div>
+          <div class="benefit-item">
+            <span class="emoji-icon">🤝</span>
+            <p style="color:var(--sw-blue); font-size:0.6em;">Colaboração</p>
+            <p style="font-size:0.45em;">Frontend e Backend em paralelo</p>
+          </div>
+          <div class="benefit-item">
+            <span class="emoji-icon">🔄</span>
+            <p style="color:var(--sw-blue); font-size:0.6em;">Automação</p>
+            <p style="font-size:0.45em;">Geração automática de código</p>
+          </div>
+          <div class="benefit-item">
+            <span class="emoji-icon">✅</span>
+            <p style="color:var(--sw-blue); font-size:0.6em;">Validação</p>
+            <p style="font-size:0.45em;">Garantia de conformidade</p>
+          </div>
+        </div>
+        <p class="force-quote fragment fade-up">"O lado luminoso da Força reside na especificação."</p>
+      </section>
+
+      <!-- SLIDE 4: What is SpecKit -->
+      <section data-transition="convex">
+        <h2 class="hologram">🔧 O que é SpecKit?</h2>
+        <div class="lightsaber lightsaber-blue fragment"></div>
+        <p class="fragment fade-up" style="font-size:0.7em; color:#ddd; max-width:700px; margin:15px auto;">
+          <strong style="color:var(--sw-yellow);">SpecKit</strong> é uma ferramenta CLI que implementa SDD,
+          permitindo <em style="color:var(--sw-green);">inicializar, gerar, validar, mockar, testar e documentar</em>
+          APIs a partir de especificações OpenAPI.
+        </p>
+        <ul class="fragment fade-left" style="max-width:600px; margin:15px auto;">
+          <li>Ferramenta de linha de comando</li>
+          <li>Baseada em OpenAPI / Swagger</li>
+          <li>Automatiza o ciclo de vida da API</li>
+          <li>Integra-se ao fluxo CI/CD</li>
+        </ul>
+        <p class="force-quote fragment fade-up">"O sabre de luz do desenvolvedor moderno."</p>
+      </section>
+
+      <!-- SLIDE 5: speckit init -->
+      <section data-transition="zoom">
+        <h2>🚀 speckit init</h2>
+        <p class="command-desc fragment fade-right">Inicializa um novo projeto SDD com a estrutura base e arquivos de configuração.</p>
+        <div class="lightsaber lightsaber-green fragment"></div>
+        <div class="command-card fragment fade-up">
+          <p class="command-name"><span class="emoji-icon">📂</span>Inicializar Projeto</p>
+          <pre><code data-trim data-noescape class="language-bash">
+# Criar um novo projeto SDD
+$ speckit init meu-projeto-api
+
+# Saída esperada:
+✅ Projeto "meu-projeto-api" criado com sucesso!
+📂 Estrutura criada:
+   ├── spec/
+   │   └── openapi.yaml
+   ├── src/
+   ├── tests/
+   ├── mocks/
+   └── speckit.config.json
+          </code></pre>
+        </div>
+        <p class="force-quote fragment fade-up">"Todo Jedi começa com o primeiro passo."</p>
+      </section>
+
+      <!-- SLIDE 6: speckit generate -->
+      <section data-transition="convex">
+        <h2>⚙️ speckit generate</h2>
+        <p class="command-desc fragment fade-right">Gera código automaticamente a partir da especificação OpenAPI.</p>
+        <div class="lightsaber lightsaber-blue fragment"></div>
+        <div class="command-card fragment fade-up">
+          <p class="command-name"><span class="emoji-icon">🏗️</span>Gerar Código</p>
+          <pre><code data-trim data-noescape class="language-bash">
+# Gerar código a partir da spec
+$ speckit generate --spec spec/openapi.yaml --lang typescript
+
+# Saída esperada:
+⚙️ Gerando código a partir de spec/openapi.yaml...
+✅ Modelos gerados:     src/models/User.ts
+✅ Controllers gerados: src/controllers/UserController.ts
+✅ Rotas geradas:       src/routes/userRoutes.ts
+🎉 Geração completa! 3 arquivos criados.
+          </code></pre>
+        </div>
+        <p class="force-quote fragment fade-up">"Use a Força... da automação."</p>
+      </section>
+
+      <!-- SLIDE 7: speckit validate -->
+      <section data-transition="slide">
+        <h2>✅ speckit validate</h2>
+        <p class="command-desc fragment fade-right">Valida se a especificação OpenAPI está correta e consistente.</p>
+        <div class="lightsaber lightsaber-green fragment"></div>
+        <div class="command-card fragment fade-up">
+          <p class="command-name"><span class="emoji-icon">🔍</span>Validar Especificação</p>
+          <pre><code data-trim data-noescape class="language-bash">
+# Validar a especificação
+$ speckit validate spec/openapi.yaml
+
+# Saída esperada (sucesso):
+🔍 Validando spec/openapi.yaml...
+✅ Esquemas válidos: 5/5
+✅ Endpoints válidos: 8/8
+✅ Referências resolvidas: 12/12
+🎉 Especificação válida! Nenhum erro encontrado.
+
+# Saída esperada (erro):
+❌ Erro na linha 42: Schema "User" falta propriedade "id"
+⚠️  Aviso na linha 58: Endpoint sem descrição
+          </code></pre>
+        </div>
+        <p class="force-quote fragment fade-up">"Confie na validação, jovem Padawan."</p>
+      </section>
+
+      <!-- SLIDE 8: speckit mock -->
+      <section data-transition="zoom">
+        <h2>🎭 speckit mock</h2>
+        <p class="command-desc fragment fade-right">Cria um servidor mock baseado na especificação para testes de integração.</p>
+        <div class="lightsaber lightsaber-red fragment"></div>
+        <div class="command-card fragment fade-up">
+          <p class="command-name"><span class="emoji-icon">🖥️</span>Servidor Mock</p>
+          <pre><code data-trim data-noescape class="language-bash">
+# Iniciar servidor mock
+$ speckit mock --spec spec/openapi.yaml --port 3000
+
+# Saída esperada:
+🎭 Iniciando servidor mock...
+📡 Mock server rodando em http://localhost:3000
+📌 Endpoints disponíveis:
+   GET    /api/users
+   POST   /api/users
+   GET    /api/users/:id
+   PUT    /api/users/:id
+   DELETE /api/users/:id
+
+# Testar o mock:
+$ curl http://localhost:3000/api/users
+[{"id": 1, "name": "Luke Skywalker", "role": "jedi"}]
+          </code></pre>
+        </div>
+        <p class="force-quote fragment fade-up">"Não é a API real, mas serve como simulação."</p>
+      </section>
+
+      <!-- SLIDE 9: speckit test -->
+      <section data-transition="convex">
+        <h2>🧪 speckit test</h2>
+        <p class="command-desc fragment fade-right">Executa testes automatizados para garantir que a API está conforme a spec.</p>
+        <div class="lightsaber lightsaber-blue fragment"></div>
+        <div class="command-card fragment fade-up">
+          <p class="command-name"><span class="emoji-icon">🎯</span>Testar Conformidade</p>
+          <pre><code data-trim data-noescape class="language-bash">
+# Executar testes de conformidade
+$ speckit test --spec spec/openapi.yaml --url http://localhost:8080
+
+# Saída esperada:
+🧪 Executando testes de conformidade...
+
+  GET /api/users
+    ✅ Status code 200
+    ✅ Response body segue o schema
+    ✅ Content-Type: application/json
+
+  POST /api/users
+    ✅ Status code 201
+    ✅ Campos obrigatórios validados
+    ❌ Campo "email" não retornado na resposta
+
+📊 Resultado: 5/6 testes passaram
+          </code></pre>
+        </div>
+        <p class="force-quote fragment fade-up">"Teste ou não teste. Não existe 'tentar'."</p>
+      </section>
+
+      <!-- SLIDE 10: speckit docs -->
+      <section data-transition="slide">
+        <h2>📖 speckit docs</h2>
+        <p class="command-desc fragment fade-right">Gera documentação interativa da API automaticamente.</p>
+        <div class="lightsaber lightsaber-green fragment"></div>
+        <div class="command-card fragment fade-up">
+          <p class="command-name"><span class="emoji-icon">📚</span>Gerar Documentação</p>
+          <pre><code data-trim data-noescape class="language-bash">
+# Gerar documentação interativa
+$ speckit docs --spec spec/openapi.yaml --output docs/
+
+# Saída esperada:
+📖 Gerando documentação...
+✅ Página principal:    docs/index.html
+✅ Referência de API:   docs/api-reference.html
+✅ Exemplos de uso:     docs/examples.html
+✅ Changelog:           docs/changelog.html
+🌐 Preview: http://localhost:4000/docs
+
+# Abrir preview:
+$ speckit docs --serve --port 4000
+📡 Documentação disponível em http://localhost:4000
+          </code></pre>
+        </div>
+        <p class="force-quote fragment fade-up">"Os arquivos Jedi devem ser preservados."</p>
+      </section>
+
+      <!-- SLIDE 11: SDD Workflow -->
+      <section data-transition="zoom">
+        <h2>🔄 Fluxo SDD Completo</h2>
+        <div class="lightsaber lightsaber-red fragment"></div>
+        <div class="fragment fade-up" style="margin-top:20px;">
+          <div class="diagram-box" style="border-color:var(--sw-yellow);">1️⃣ speckit init</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box" style="border-color:var(--sw-green);">2️⃣ Escrever Spec</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box" style="border-color:var(--sw-blue);">3️⃣ speckit validate</div>
+        </div>
+        <div class="fragment fade-up" style="margin-top:15px;">
+          <span class="diagram-arrow">↓</span>
+        </div>
+        <div class="fragment fade-up" style="margin-top:15px;">
+          <div class="diagram-box" style="border-color:var(--sw-red);">6️⃣ speckit docs</div>
+          <span class="diagram-arrow">←</span>
+          <div class="diagram-box" style="border-color:var(--sw-orange);">5️⃣ speckit test</div>
+          <span class="diagram-arrow">←</span>
+          <div class="diagram-box" style="border-color:var(--sw-yellow);">4️⃣ speckit generate</div>
+        </div>
+        <div class="fragment fade-up" style="margin-top:20px;">
+          <p style="font-size:0.5em; color:var(--sw-blue); font-family:'Orbitron',sans-serif;">
+            + <code>speckit mock</code> em paralelo para o frontend 🎭
+          </p>
+        </div>
+        <p class="force-quote fragment fade-up">"O ciclo completo da Força do desenvolvimento."</p>
+      </section>
+
+      <!-- SLIDE 12: Benefits -->
+      <section data-transition="convex">
+        <h2>💫 Benefícios do SDD + SpecKit</h2>
+        <div class="lightsaber lightsaber-blue fragment"></div>
+        <ul style="max-width:700px; margin:15px auto;">
+          <li class="fragment fade-right">Redução de bugs com validação contínua</li>
+          <li class="fragment fade-right">Desenvolvimento frontend e backend em paralelo</li>
+          <li class="fragment fade-right">Documentação sempre atualizada</li>
+          <li class="fragment fade-right">Onboarding rápido de novos desenvolvedores</li>
+          <li class="fragment fade-right">Integração fácil com CI/CD</li>
+          <li class="fragment fade-right">Padronização de APIs em toda a organização</li>
+        </ul>
+        <p class="force-quote fragment fade-up">"O poder do lado luminoso: consistência e automação."</p>
+      </section>
+
+      <!-- SLIDE 13: Closing -->
+      <section data-transition="zoom" data-background-transition="zoom">
+        <p style="font-size:3em; margin-bottom:10px;">⭐</p>
+        <h1 class="sw-title fragment fade-up" style="font-size:2em !important;">Que a Spec<br>esteja com você</h1>
+        <div class="lightsaber lightsaber-green fragment fade-in"></div>
+        <div class="fragment fade-up" style="margin-top:20px;">
+          <p style="color:var(--sw-blue); font-family:'Orbitron',sans-serif; font-size:0.6em;">
+            SDD + SpecKit = 🚀 APIs de qualidade galáctica
+          </p>
+        </div>
+        <div class="fragment fade-up" style="margin-top:30px;">
+          <p style="font-size:0.5em; color:#888; font-family:'Orbitron',sans-serif;">
+            Obrigado! | Dúvidas?
+          </p>
+        </div>
+      </section>
+
+    </div>
+    <div class="footer-note">✦ SDD — Spec Driven Development ✦</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'convex',
+      transitionSpeed: 'slow',
+      backgroundTransition: 'zoom',
+      controls: true,
+      progress: true,
+      center: true,
+      autoAnimate: true,
+      plugins: [RevealHighlight, RevealNotes]
+    });
+  </script>
+</body>
+</html>
