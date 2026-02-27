@@ -83,3 +83,4 @@ O tema visual fica em `css/starwars-theme.css` e inclui:
 - HTML5 / CSS3 com animações
 - Google Fonts (Orbitron)
 - GitHub Pages (deploy automático)
+  
